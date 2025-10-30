@@ -1,0 +1,41 @@
+@startuml DeleteParserSequence
+hide footbox
+
+actor User
+participant ":Zettel"
+participant ":UI"
+participant ":Parser"
+participant ":DeleteNoteCommand"
+participant ":Storage"
+
+activate ":Zettel"
+
+User -> ":Zettel": input "delete -f abc12345"
+":Zettel" -> ":UI": readCommand()
+activate ":UI"
+":UI" --> ":Zettel": "delete -f abc12345"
+deactivate ":UI"
+
+":Zettel" -> ":Parser": parse(userInput)
+activate ":Parser"
+":Parser" --> ":Zettel": DeleteNoteCommand(noteId="abc12345", isForce=true)
+deactivate ":Parser"
+
+":Zettel" -> ":DeleteNoteCommand": execute(notes, tags, ui, storage)
+activate ":DeleteNoteCommand"
+
+":DeleteNoteCommand" -> ":Storage": deleteStorageFile("abc12345.txt")
+activate ":Storage"
+":Storage" --> ":DeleteNoteCommand": deletion complete
+deactivate ":Storage"
+
+":DeleteNoteCommand" -> ":Storage": save(notes)
+activate ":Storage"
+":Storage" --> ":DeleteNoteCommand": notes saved
+deactivate ":Storage"
+
+":DeleteNoteCommand" --> ":Zettel": execution complete
+deactivate ":DeleteNoteCommand"
+
+@enduml
+

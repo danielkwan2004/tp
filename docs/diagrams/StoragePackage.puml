@@ -1,0 +1,65 @@
+@startuml StoragePackage
+skinparam classAttributeIconSize 0
+
+package storage {
+    class Storage {
+        - static final String DEFAULT_REPO
+        - FileSystemManager fileSystemManager
+        - NoteSerializer noteSerializer
+        - String repoName
+        - ArrayList<String> repoList
+
+        + Storage(String rootPath)
+        + void init()
+        + String readCurrRepo()
+        + List<String> readTagsLine()
+        + void createStorageFile(Note note)
+        + void loadConfig()
+        + void updateConfig(String newRepo)
+        + void updateTags(List<String> tags)
+        + ArrayList<Note> load()
+        + void save(List<Note> notes)
+        + void changeRepo(String newRepo)
+        + void createRepo(String repoName)
+        + void deleteStorageFile(String filename)
+    }
+
+    class FileSystemManager {
+        - static final String CONFIG_FILE
+        - static final String TAGS_FILE
+        - static final String REPO_NOTES
+        - static final String REPO_ARCHIVE
+        - static final String REPO_INDEX
+        - Path rootPath
+
+        + FileSystemManager(String rootPath)
+        + Path getRootPath()
+        + void createRootFolder()
+        + void createConfigFile(String defaultRepo)
+        + boolean createRepoStructure(String repoName)
+        + void createNoteFile(String noteFilename, String noteBody, String repoName)
+        + void validateRepoStructure(String repoName, List<String> expectedFiles)
+        + void validateTagsFile()
+        + Path getIndexPath(String repoName)
+        + Path getNotesPath(String repoName)
+        + Path getConfigPath()
+    }
+
+    class NoteSerializer {
+        - static final String LIST_DELIM
+
+        + ArrayList<Note> loadNotes(Path indexPath, Path notesDir)
+        + void saveNotes(List<Note> notes, Path indexPath)
+        + List<String> getExpectedFilenames(Path indexPath)
+    }
+
+    class Note {
+    }
+
+
+    Storage *-- FileSystemManager : uses
+    Storage *-- NoteSerializer : uses
+    NoteSerializer --> Note : serializes/deserializes
+    FileSystemManager --> Path : file operations
+}
+@enduml

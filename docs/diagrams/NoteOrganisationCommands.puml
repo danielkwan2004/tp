@@ -1,0 +1,17 @@
+@startuml NoteOrganisationCommands
+skinparam classAttributeIconSize 0
+
+abstract class Command {
+    + abstract void execute(ArrayList<Note> notes, List<String> tags, UI ui, Storage storage) 
+    + boolean isExit()
+}
+
+class FindNoteCommand
+class ListNoteCommand
+class PinNoteCommand
+
+' Inheritance
+FindNoteCommand -up-> Command
+PinNoteCommand -up-> Command
+ListNoteCommand -up-> Command
+@enduml

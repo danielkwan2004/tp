@@ -1,0 +1,69 @@
+@startuml LinkCreationSequence
+actor User
+participant ":LinkNotesCommand" as Command
+participant ":ArrayList<Note>" as Notes
+participant ":UI" as UI
+participant "sourceNote:Note" as SourceNote
+participant "targetNote:Note" as TargetNote
+
+hide footbox
+
+User -> Command: execute(notes, tags, ui, storage)
+activate Command
+
+Command -> Notes: check isEmpty()
+activate Notes
+Notes --> Command: return (false)
+deactivate Notes
+
+alt Notes empty
+    Command -> UI: show error "No notes to link"
+    Command --> User: throw NoNotesException
+end
+
+Command -> Notes: find sourceNote by ID
+activate Notes
+Notes --> Command: return SourceNote
+deactivate Notes
+
+Command -> Notes: find targetNote by ID
+activate Notes
+Notes --> Command: return TargetNote
+deactivate Notes
+
+alt Either note missing
+    Command --> User: throw InvalidNoteIdException
+end
+
+Command -> Command: check if same ID
+alt Same note
+    Command --> User: throw NoteSelfLinkException
+end
+
+Command -> SourceNote: isLinkedTo(targetNoteId)
+activate SourceNote
+SourceNote --> Command: return false
+deactivate SourceNote
+
+alt Already linked
+    Command --> User: throw NotesAlreadyLinkedException
+end
+
+Command -> SourceNote: addOutgoingLink(targetNoteId)
+activate SourceNote
+SourceNote --> Command: link added
+deactivate SourceNote
+
+Command -> TargetNote: addIncomingLink(sourceNoteId)
+activate TargetNote
+TargetNote --> Command: link added
+deactivate TargetNote
+
+Command -> UI: showSuccessfulLinking(sourceTitle, targetTitle)
+activate UI
+UI --> Command: done
+deactivate UI
+
+Command --> User: return
+deactivate Command
+@enduml

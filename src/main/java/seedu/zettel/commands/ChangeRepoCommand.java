@@ -62,6 +62,6 @@ public class ChangeRepoCommand extends Command {
         tags.clear();
         tags.addAll(storage.readTagsLine());
 
-        ui.showRepoChanged(repoName);
+        ui.showSuccessfullyRepoChanged(repoName);
     }
 }

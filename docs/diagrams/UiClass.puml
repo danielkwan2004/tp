@@ -1,0 +1,47 @@
+@startuml UIClass
+skinparam classAttributeIconSize 0
+
+class UI {
+    - static final String LINE
+    - static final String LIST_INCOMING
+    - static final String LIST_OUTGOING
+    - Scanner scanner
+
+    + UI()
+    + String readCommand()
+    + void showWelcome()
+    + void showHelp()
+    + void showDeletionCancelled()
+    + void showNoteDeleted(String id)
+    + void showDeleteNoteConfirmation(String id, String noteTitle)
+    + void showDeleteTagConfirmation(String tag)
+    + void showDeleteTagFromNoteConfirmation(String tag, String noteId)
+    + void showError(String message)
+    + void showBye()
+    + void showAddedNote(Note note)
+    + void showNoPinnedNotes()
+    + void showNoNotes()
+    + void showNoteList(List<Note> notes, boolean isPinned)
+    + void printLine()
+    + void close()
+    + void showNoNotesFound()
+    + void showFoundNotes(ArrayList<Note> matchedNotes)
+    + void showJustPinnedNote(Note note, String noteId)
+    + void showRepoInit(String repoName)
+    + void showSuccessfullyTaggedNote(String noteID, String tag)
+    + void showSuccessfullyAddedTag(String tag)
+    + void showOpeningEditor()
+    + void showNoteSavedFromEditor()
+    + void showNoteEdited(Note updatedNote)
+    + void showSuccessfulLinking(String referencingTitle, String linkedToTitle)
+    + void showLinkedNotes(ArrayList<Note> linkedNotes, String noteId, String listToShow)
+    + void showSuccessfullyUnlinkedNotes(String sourceNoteId, String targetNoteId)
+    + void showSuccessfullyDoubleLinkedNotes(String noteTitle1, String noteTitle2)
+    + void showSuccessfullyUnlinkedBothNotes(String noteId1, String noteId2)
+    + void showTagsSingleNote(List<String> tags, String noteId)
+    + void showTagsListGlobal(List<String> tags)
+    + void showSuccessfullyDeletedTagFromNote(String noteId, String tag)
+    + void showSuccessfullyDeletedTag(String tag)
+    + void showSuccessfullyRenamedTag(String oldTag, String newTag)
+}
+@enduml

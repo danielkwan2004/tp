@@ -1,0 +1,39 @@
+@startuml ArchiveFlow
+start
+
+:Receive noteId and shouldArchive;
+
+:Find note in notes list by ID;
+if (Note not found?) then (yes)
+  :Throw NoNoteFoundException;
+  stop
+else (no)
+endif
+
+if (shouldArchive?) then (yes)
+  if (Note is already archived?) then (yes)
+    :Throw InvalidInputException ("Note already archived");
+    stop
+  else (no)
+  endif
+else (no)
+  if (Note is not archived?) then (yes)
+    :Throw InvalidInputException ("Note not archived");
+    stop
+  else (no)
+  endif
+endif
+
+:Move physical file using Storage.moveNoteBetweenDirectories;
+:Update Note metadata (archived flag, archiveName);
+
+:Save notes via Storage.save;
+
+if (shouldArchive?) then (yes)
+  :UI.showArchivedNote(targetNote);
+else (no)
+  :UI.showUnarchivedNote(targetNote);
+endif
+
+stop
+@enduml

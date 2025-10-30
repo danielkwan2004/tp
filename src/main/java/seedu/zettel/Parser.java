@@ -106,6 +106,9 @@ public class Parser {
      * @throws ZettelException If the command format is invalid or parameters are missing.
      */
     public static Command parse(String input) throws ZettelException {
+        if (input.contains("|")) {
+            throw new InvalidFormatException("Invalid character '|' detected in command input!");
+        }
         String[] inputs = input.trim().split("\\s+"); //split input based on spaces in between
         String command = inputs[0].toLowerCase(); //first word of user input
         return switch (command) {

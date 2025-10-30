@@ -1,0 +1,40 @@
+@startuml RenameTagSequence
+actor User
+participant ":RenameTagCommand" as Command
+participant "notes:ArrayList<Notes>" as Notes
+participant "tags:List<String>" as Tags
+participant "ui:UI" as UI
+participant "storage:Storage" as Storage
+
+hide footbox
+
+User -> Command: execute(notes, tags, ui, storage)
+activate Command
+
+Command -> Tags: validate oldTag exists
+Tags --> Command: ok
+
+Command -> Tags: validate newTag not exists
+Tags --> Command: ok
+
+Command -> Tags: replace oldTag with newTag
+Tags --> Command: updated
+
+Command -> Notes: for each note containing oldTag
+activate Notes
+Notes --> Command: oldTag replaced with newTag in note
+deactivate Notes
+
+Command -> Storage: updateTags(tags)
+activate Storage
+Storage --> Command: tags persisted
+deactivate Storage
+
+Command -> UI: showSuccessfullyRenamedTag(oldTag, newTag)
+activate UI
+UI --> Command: done
+deactivate UI
+
+Command --> User: return
+deactivate Command
+@enduml

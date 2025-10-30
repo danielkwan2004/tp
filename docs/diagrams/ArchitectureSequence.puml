@@ -1,0 +1,40 @@
+@startuml NewNote
+hide footbox
+
+actor User
+participant ":Zettel"
+participant ":UI"
+participant ":Parser"
+participant ":Command"
+participant ":Storage"
+
+activate ":Zettel"
+
+User -> ":Zettel": input "new -t MyNote -b Content"
+":Zettel" -> ":UI": readCommand()
+activate ":UI"
+":UI" --> ":Zettel": "new -t MyNote -b Content"
+deactivate ":UI"
+
+":Zettel" -> ":Parser": parse(userInput)
+activate ":Parser"
+":Parser" --> ":Zettel": NewNoteCommand
+deactivate ":Parser"
+
+":Zettel" -> ":Command": execute(notes, tags, ui, storage)
+activate ":Command"
+
+":Command" -> ":Storage": add note
+activate ":Storage"
+":Storage" --> ":Command": modification done
+deactivate ":Storage"
+
+":Command" -> ":UI": show output
+activate ":UI"
+":UI" --> ":Command": done
+deactivate ":UI"
+
+":Command" --> ":Zettel": execution complete
+deactivate ":Command"
+
+@enduml

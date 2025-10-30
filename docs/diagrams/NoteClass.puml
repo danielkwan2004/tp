@@ -1,0 +1,60 @@
+@startuml NoteClass
+skinparam classAttributeIconSize 0
+
+class Note {
+    - static Logger logger
+    - static DateTimeFormatter DATE_FORMATTER
+    - static int ID_LENGTH = 8
+    - static int numberOfNotes
+
+    - String id
+    - String title
+    - String filename
+    - String body
+    - Instant createdAt
+    - Instant modifiedAt
+    - boolean pinned
+    - boolean archived
+    - String archiveName
+    - List<String> logs
+    - List<String> tags
+    - HashSet<String> outgoingLinks
+    - HashSet<String> incomingLinks
+
+    + Note(String id, String title, String filename, String body, Instant createdAt, Instant modifiedAt)
+    + Note(String id, String title, String filename, String body, Instant createdAt, Instant modifiedAt,
+           boolean pinned, boolean archived, String archiveName, List<String> tags)
+
+    + String getId()
+    + String getTitle()
+    + String getFilename()
+    + String getBody()
+    + Instant getCreatedAt()
+    + Instant getModifiedAt()
+    + boolean isPinned()
+    + boolean isArchived()
+    + boolean isLinkedTo(String noteId)
+    + boolean isLinkedBy(String noteId)
+    + String getArchiveName()
+    + List<String> getTags()
+    + static int getNumberOfNotes()
+    + HashSet<String> getOutgoingLinks()
+    + HashSet<String> getIncomingLinks()
+
+    + void setTitle(String title)
+    + void setFilename(String filename)
+    + void setBody(String body)
+    + void setPinned(boolean pinned)
+    + void setArchived(boolean archived)
+    + void setArchiveName(String archiveName)
+    + void addTag(String tag)
+    + void removeTag(String tag)
+    + void addOutgoingLink(String noteId)
+    + void addIncomingLink(String noteId)
+    + void removeOutgoingLink(String noteId)
+    + void removeIncomingLink(String noteId)
+    + void updateModifiedAt()
+    + void loadBody(String body)
+    + String toString()
+}
+@enduml

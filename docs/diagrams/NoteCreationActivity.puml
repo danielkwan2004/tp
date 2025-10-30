@@ -1,0 +1,36 @@
+@startuml NoteCreationActivity
+start
+
+:User enters "new <title> [body]";
+:NewNoteCommand created;
+
+:Generate timestamp (Instant.now);
+:Compute ID = hash(title + timestamp);
+
+if (Filename already exists?) then (Yes)
+  :Throw InvalidInputException;
+  stop
+else (No)
+  :Create Note(title, id, body, timestamps);
+endif
+
+:Add note to notes list;
+:storage.createStorageFile(note);
+:storage.save(notes);
+
+if (shouldOpenEditor?) then (Yes)
+  :ui.showOpeningEditor();
+  :EditorUtil.openInEditor(notePath);
+  :User edits and saves file;
+  :Read file back (Files.readString);
+  :note.setBody(editedBody);
+  :note.updateModifiedAt();
+  :storage.save(notes);
+  :ui.showNoteSavedFromEditor();
+else (No)
+  :Skip editor step;
+endif
+
+:ui.showAddedNote(note);
+stop
+@enduml

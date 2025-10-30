@@ -1,0 +1,39 @@
+@startuml StorageSaveSequence
+hide footbox
+
+actor User
+participant ":Command"
+participant ":Storage"
+participant ":NoteSerializer"
+participant ":FileSystemManager"
+entity "File System" as FS
+
+User -> ":Command": execute(notes, tags, ui, storage)
+activate ":Command"
+
+":Command" -> ":Storage": save(notes)
+activate ":Storage"
+
+":Storage" -> ":NoteSerializer": saveNotes(notes)
+activate ":NoteSerializer"
+
+":NoteSerializer" -> ":FileSystemManager": getSavePath()
+activate ":FileSystemManager"
+":FileSystemManager" --> ":NoteSerializer": path
+deactivate ":FileSystemManager"
+
+":NoteSerializer" -> FS: write serialized note data
+activate FS
+FS --> ":NoteSerializer": write complete
+deactivate FS
+
+":NoteSerializer" --> ":Storage": save complete
+deactivate ":NoteSerializer"
+
+":Storage" --> ":Command": success
+deactivate ":Storage"
+
+":Command" --> User: show success message
+deactivate ":Command"
+
+@enduml

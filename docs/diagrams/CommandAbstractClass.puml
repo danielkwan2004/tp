@@ -1,0 +1,9 @@
+@startuml CommandClass
+skinparam classAttributeIconSize 0
+
+abstract class Command {
+    + abstract void execute(ArrayList<Note> notes, List<String> tags, UI ui, Storage storage) 
+    + boolean isExit()
+}
+
+@enduml

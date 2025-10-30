@@ -1,0 +1,17 @@
+@startuml SystemCommands
+skinparam classAttributeIconSize 0
+
+abstract class Command {
+    + abstract void execute(ArrayList<Note> notes, List<String> tags, UI ui, Storage storage) 
+    + boolean isExit()
+}
+class InitCommand
+class ChangeRepoCommand
+class ExitCommand
+class HelpCommand
+
+InitCommand -up-> Command
+ExitCommand -up-> Command
+ChangeRepoCommand -up-> Command
+HelpCommand -up-> Command
+@enduml

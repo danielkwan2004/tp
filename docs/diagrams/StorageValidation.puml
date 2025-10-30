@@ -1,0 +1,57 @@
+@startuml StorageValidationFlow
+start
+
+:Call validateRepo(repoName);
+:Retrieve indexPath for repo;
+:Get expectedFilesMap from NoteSerializer;
+:Call FileSystemManager.validateRepoStructure(repoName, expectedFilesMap);
+
+if (.zettelConfig exists?) then (yes)
+    :Continue;
+else (no)
+    :Throw InvalidRepoException;
+    stop
+endif
+
+if (repository folder exists?) then (yes)
+    :Continue;
+else (no)
+    :Create repo folder;
+endif
+
+if (notes/ folder exists?) then (yes)
+    :Continue;
+else (no)
+    :Create notes/ folder;
+endif
+
+if (archive/ folder exists?) then (yes)
+    :Continue;
+else (no)
+    :Create archive/ folder;
+endif
+
+if (index.txt exists?) then (yes)
+    :Continue;
+else (no)
+    :Create index.txt;
+endif
+
+repeat
+    :For each expected note file in expectedFilesMap;
+    if (file exists in correct directory?) then (yes)
+        :Continue;
+    else (no)
+        :Create missing note file;
+    endif
+repeat while (more files?)
+
+:Detect orphan files in notes/ and archive/;
+if (orphans found?) then (yes)
+    :Log orphan filenames;
+else (no)
+    :Continue;
+endif
+
+stop
+@enduml

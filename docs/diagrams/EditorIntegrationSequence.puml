@@ -1,0 +1,76 @@
+@startuml EditorIntegrationSequence
+actor User
+participant CLI
+participant EditorUtil
+participant System
+participant Process
+
+hide footbox
+
+User -> CLI : Run command to edit note
+activate CLI
+
+CLI -> EditorUtil : openInEditor(filePath)
+activate EditorUtil
+
+EditorUtil -> System : Check if file exists
+activate System
+alt File missing
+    System --> EditorUtil : File not found
+    EditorUtil --> CLI : throw NoNoteFoundException
+else File exists
+    System --> EditorUtil : exists
+    deactivate System
+end
+
+EditorUtil -> System : Check if console is available
+activate System
+alt No console
+    System --> EditorUtil : No console
+    EditorUtil --> CLI : throw EditorNotFoundException
+else Console available
+    System --> EditorUtil : console ok
+    deactivate System
+end
+
+EditorUtil -> System : Read $VISUAL, $EDITOR env vars
+activate System
+System --> EditorUtil : editor command(s)
+deactivate System
+
+alt Editor found
+    EditorUtil -> Process : tryLaunchEditor(editor, file)
+    activate Process
+    Process --> EditorUtil : exitCode
+    deactivate Process
+    alt Success
+        EditorUtil --> CLI : return
+    else Failure
+        EditorUtil -> System : Detect OS
+        activate System
+        System --> EditorUtil : OS info
+        deactivate System
+
+        alt Windows
+            EditorUtil -> Process : tryLaunchEditor("notepad.exe", file)
+            activate Process
+        else Other OS
+            EditorUtil -> Process : tryLaunchEditor("vim/nano/vi", file)
+        end
+        activate Process
+        Process --> EditorUtil : exitCode
+        deactivate Process
+        alt Success
+            EditorUtil --> CLI : return
+        else Failure
+            EditorUtil --> CLI : throw EditorNotFoundException
+        end
+    end
+else No editor found
+    EditorUtil --> CLI : throw EditorNotFoundException
+    deactivate EditorUtil
+end
+
+deactivate CLI
+
+@enduml

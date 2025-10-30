@@ -1,0 +1,22 @@
+@startuml LinkCommands
+skinparam classAttributeIconSize 0
+
+abstract class Command {
+    + abstract void execute(ArrayList<Note> notes, List<String> tags, UI ui, Storage storage) 
+    + boolean isExit()
+}
+
+class LinkNotesCommand
+class UnlinkNotesCommand
+class LinkBothNotesCommand
+class UnlinkBothNotesCommand
+class ListLinkedNotesCommand
+
+' Inheritance
+ListLinkedNotesCommand --> Command
+LinkNotesCommand --> Command
+UnlinkNotesCommand --> Command
+LinkBothNotesCommand -up-> Command
+UnlinkBothNotesCommand -up-> Command
+
+@enduml

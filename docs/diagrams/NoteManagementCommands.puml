@@ -1,0 +1,23 @@
+@startuml NoteManagementCommands
+skinparam classAttributeIconSize 0
+
+package NoteCommands {
+    abstract class Command {
+        + abstract void execute(ArrayList<Note> notes, List<String> tags, UI ui, Storage storage) 
+        + boolean isExit()
+    }
+
+    class NewNoteCommand
+    class EditNoteCommand
+    class DeleteNoteCommand
+    class ArchiveNoteCommand
+    class PrintNoteBodyCommand
+
+    ' Inheritance
+    NewNoteCommand --> Command
+    DeleteNoteCommand --> Command
+    EditNoteCommand --> Command
+    ArchiveNoteCommand -up-> Command
+    PrintNoteBodyCommand -up-> Command
+}
+@enduml

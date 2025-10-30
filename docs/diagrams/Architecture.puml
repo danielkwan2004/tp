@@ -1,0 +1,20 @@
+@startuml Architecture
+
+actor User
+
+
+package "ZettelCLI" {
+    rectangle ":Zettel" as Zettel
+    rectangle ":UI" as UI
+    rectangle ":Parser" as Parser
+    rectangle ":Command" as Command
+    rectangle ":Storage" as Storage
+}
+
+User -down-> Zettel
+Zettel -left-> Parser
+Parser --> Command 
+Zettel --> Command 
+Command -right-> Storage     
+Command -left-> UI 
+@enduml
